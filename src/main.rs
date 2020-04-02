@@ -1,6 +1,6 @@
 use gtk::prelude::*;
 use gio::prelude::*;
-use gtk::{ ScrolledWindow, TextView, Adjustment };
+use gtk::{ ScrolledWindow, TextView, Adjustment, MenuItem, MenuBar, Menu };
 use std::env;
 
 fn main() {
@@ -29,7 +29,24 @@ fn new_window<T: IsA<gtk::Application>>(app: &T) -> gtk::ApplicationWindow {
     let win = gtk::ApplicationWindow::new(app);
     win.set_default_size(320, 320);
     win.set_title("Basic example");
-    let scr_win = editor_new();
-    win.add(&scr_win);
+    win.add(&new_vbox());
     win
+}
+
+fn new_menubar() -> MenuBar {
+    let menu = MenuBar::new();
+    menu.append(&new_file_menu());
+    menu
+}
+
+fn new_vbox() -> gtk::Box {
+    let ret = gtk::Box::new(gtk::Orientation::Vertical, 10);
+    ret.pack_start(&new_menubar(), false, false, 0);
+    ret.pack_start(&editor_new(), false, true, 0);
+    ret
+}
+
+fn new_file_menu() -> MenuItem {
+    let menu_item = MenuItem::new_with_label("File");
+    menu_item
 }
